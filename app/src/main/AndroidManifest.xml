@@ -22,6 +22,10 @@
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
+    <uses-permission android:name="org.khronos.openxr.permission.OPENXR" />
+    <uses-permission android:name="org.khronos.openxr.permission.OPENXR_SYSTEM" />
+    <uses-permission android:name="com.oculus.permission.HAND_TRACKING" />
+
     <queries>
         <!-- 
             QUERY_ALL_PACKAGES does not work on some devices running Android 11+ (like Google TV 14), 
@@ -61,6 +65,14 @@
         <!-- Torrent clients -->
         <package android:name="org.proninyaroslav.libretorrent" />
         <package android:name="com.biglybt.android.client" />
+
+        <provider android:authorities="org.khronos.openxr.runtime_broker;org.khronos.openxr.system_runtime_broker" />
+        <intent>
+            <action android:name="org.khronos.openxr.OpenXRRuntimeService" />
+        </intent>
+        <intent>
+            <action android:name="org.khronos.openxr.OpenXRApiLayerService" />
+        </intent>
     </queries>
 
     <!-- Fixes android tv fuckery -->
@@ -69,6 +81,17 @@
         android:required="false" />
     <uses-feature
         android:name="android.software.leanback"
+        android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.vr.headtracking"
+        android:required="false"
+        android:version="1" />
+    <uses-feature
+        android:name="oculus.software.handtracking"
+        android:required="false" />
+    <uses-feature
+        android:name="com.oculus.feature.PASSTHROUGH"
         android:required="false" />
 
     <!-- Without the large heap Exoplayer buffering gets reset due to OOM. -->
@@ -278,6 +301,22 @@
         <activity
             android:name=".ui.ControllerActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".ui.VrActivity"
+            android:configChanges="density|keyboard|keyboardHidden|navigation|orientation|screenLayout|screenSize|uiMode"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:taskAffinity="${applicationId}.vr"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="com.oculus.intent.category.VR" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".services.PackageInstallerService"
