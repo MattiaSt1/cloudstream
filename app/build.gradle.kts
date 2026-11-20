@@ -296,6 +296,7 @@ dependencies {
 
     implementation(project(":library"))
     implementation(project(":shared"))
+    implementation(project(":vr"))
 }
 
 tasks.register<Jar>("androidSourcesJar") {
